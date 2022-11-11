@@ -1,0 +1,41 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
+    id 'io.github.redgreencoding.plantuml' version '0.2.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Align versions of all Kotlin components
+    implementation platform('org.jetbrains.kotlin:kotlin-bom')
+
+    // Use the Kotlin JDK 8 standard library.
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-cli:0.3.5"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+}
+
+plantuml {
+    options {
+        outputDir = project.file("documentation/diagrams")
+        format = "svg"
+    }
+    diagrams {
+        project.fileTree("diagrams").forEach{ file ->
+            create(file.name) { sourceFile = project.file(file.path)}
+        }
+    }
+}
+
+application {
+    mainClass = 'com.expediagroup.startup.AppKt'
+}
