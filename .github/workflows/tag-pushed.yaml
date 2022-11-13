@@ -1,0 +1,11 @@
+name: Create Release
+
+on:
+  push:
+    tags: [ * ]
+
+jobs:
+  test:
+    steps:
+      - name: Say hello
+        run: "echo hello"
