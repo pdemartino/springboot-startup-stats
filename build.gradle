@@ -39,3 +39,9 @@ plantuml {
 application {
     mainClass = 'com.expediagroup.startup.AppKt'
 }
+
+if (hasProperty('installPrefix')) {
+    installDist {
+        destinationDir = file("$installPrefix")
+    }
+}
