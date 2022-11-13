@@ -26,13 +26,13 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: distTar
+          arguments: -Pversion=${{ env.RELEASE_VERSION }} distTar
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/distributions
-          asset_name: AssetName
+          asset_path: ./build/distributions/springboot-startup-stats-${{ env.RELEASE_VERSION }}.tar
+          asset_name: springboot-startup-stats-${{ env.RELEASE_VERSION }}.tar
           asset_content_type: application/octet-stream
