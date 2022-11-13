@@ -43,7 +43,10 @@ fun statsMode(tree: StartupTree, threshold: Double) {
     stringBuffer.add("Number of roots: ${tree.roots.count()}")
     stringBuffer.add("Number of leaves: ${tree.nodes.count { it.isLeaf() }}")
     stringBuffer.add("Global duration: ${tree.roots.sumOf { it.treeDuration.toDouble() }}")
-    val offendingNodes = tree.nodes.filter { isOffender(it, threshold) }
+
+    val offendingNodes = tree.nodes
+        .filter { isOffender(it, threshold) }
+        .sortedByDescending { it.stepDuration }
     stringBuffer.add("Offending nodes: ${offendingNodes.count()}")
     offendingNodes.forEach {
         stringBuffer.add(it.toString())
