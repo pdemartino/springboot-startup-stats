@@ -23,7 +23,7 @@ jobs:
       - name: Create Distribution with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: -Pversion=${{ github.ref }} distTar
+          arguments: -Pversion=${{ github.ref_name }} distTar
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -41,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./build/distributions/springboot-startup-stats-${{ github.ref }}.tar
-          asset_name: springboot-startup-stats-${{ github.ref }}.tar
+          asset_path: ./build/distributions/springboot-startup-stats-${{ github.ref_name }}.tar
+          asset_name: springboot-startup-stats-${{ github.ref_name }}.tar
           asset_content_type: application/x-tar
 
