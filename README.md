@@ -1,21 +1,33 @@
 SpringBoot Startup Stats
 =====
 
+*This is Free Software and it's distributed under [GPLv3](./LICENSE)*
+
 Utility to extract statistics from Spring Boot Startup 
 actuator and identify bottlenecks and slow beans during the start-up procedure.
 
-# How to build
+# Hot to install
 
-In the project root, run:
+## Homebrew on MacOS
 ```
-./gradlew clean installDist
+brew tap pdemartino/tap
+brew install springboot-startup-stats
+```
+
+## Other installation methods
+
+You can rely on Gradle:
+```
+INSTALL_DIR=$HOME/springboot-startup-stats
+./gradlew clean -PinstallPrefix=$INSTALL_DIR installDist
+
+ls $INSTALL_DIR
 ```
 
 # How to run
 
-In the project root, after you've built the project, run:
 ```
-./build/install/springboot-startup-stats/bin/springboot-startup-stats -h
+springboot-startup-stats -h
 
 Usage: springboot-startup-stats options_list
 Arguments: 
