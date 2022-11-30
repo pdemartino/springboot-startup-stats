@@ -6,6 +6,7 @@ import com.pdemartino.springstartup.output.printTree
 import com.pdemartino.springstartup.springboot.SpringBootStartupProvider
 import com.pdemartino.springstartup.springboot.toStartupTree
 import com.pdemartino.springstartup.Arguments.Companion.MODE
+import java.net.http.HttpConnectTimeoutException
 
 import kotlin.system.exitProcess
 
@@ -17,9 +18,13 @@ val HTTP_ENDPOINT_REGEX = """https?://.*""".toRegex()
 fun main(args: Array<String>) {
     val arguments = Arguments.getFromCommandLineArguments(args)
     println(arguments)
-    when(arguments.mode) {
-        MODE.stats -> statsMode(getTree(arguments.source)!!, arguments.offendingThreshold)
-        MODE.tree -> treeMode(getTree(arguments.source)!!, arguments.offendingThreshold, arguments.treeRoot)
+    try {
+        when (arguments.mode) {
+            MODE.stats -> statsMode(getTree(arguments.source)!!, arguments.offendingThreshold)
+            MODE.tree -> treeMode(getTree(arguments.source)!!, arguments.offendingThreshold, arguments.treeRoot)
+        }
+    } catch (e: HttpConnectTimeoutException) {
+        System.err.println("Timeout while connecting to specified endpoint")
     }
 
 }
@@ -29,7 +34,7 @@ fun getTree(source: String) =
         source.matches(FILENAME_REGEX) -> SpringBootStartupProvider().getFromFile(source)
         source.matches(HTTP_ENDPOINT_REGEX) -> SpringBootStartupProvider().getFromUrl(source)
         else -> {
-            println("source must be a file or a URL")
+            System.err.println("source must be a file or a URL")
             exitProcess(1)
         }
     }?.toStartupTree()

@@ -7,8 +7,11 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.time.Duration
 
 class SpringBootStartupProvider {
+
+    private val TIMEOUT_SECS = 20L
 
     fun getFromFile(filepath: String): StartupActuatorInformation =
         Json.decodeFromString(
@@ -20,6 +23,7 @@ class SpringBootStartupProvider {
             .GET()
             .uri(URI.create(url))
             .header("Content-Type", "application/json")
+            .timeout(Duration.ofSeconds(TIMEOUT_SECS))
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
