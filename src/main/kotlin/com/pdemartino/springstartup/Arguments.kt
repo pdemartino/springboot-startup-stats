@@ -8,7 +8,8 @@ class Arguments(
     val source: String,
     val mode: MODE,
     val offendingThreshold: Double,
-    val treeRoot: String?
+    val treeRoot: String?,
+    val filepath: String?
 ) {
 
     companion object {
@@ -16,7 +17,8 @@ class Arguments(
 
         enum class MODE(val description: String) {
             stats("Print statistics about the whole start-up tree"),
-            tree("Print start-up tree with start-up info")
+            tree("Print start-up tree with start-up info"),
+            csv("Print all start-up information into a CSV file")
         }
 
         fun getFromCommandLineArguments(args: Array<String>): Arguments {
@@ -31,6 +33,11 @@ class Arguments(
                 ArgType.Choice<MODE>(),
                 description = "Type of analysis you want to get as output",
             ).default(MODE.stats)
+
+            val filepath by parser.option(
+                ArgType.String,
+                description = "Path of the output file"
+            )
 
             val offendingThreshold by parser.option(
                 ArgType.Double,
@@ -48,16 +55,26 @@ class Arguments(
                 source,
                 mode,
                 offendingThreshold ?: DEFAULT_OFFENDING_THRESHOLD,
-                treeRoot
+                treeRoot,
+                filepath
             )
         }
+
     }
 
     override fun toString(): String = listOf<String>(
         "Source: $source",
         "Mode: $mode",
         "Offending Threshold: $offendingThreshold",
-        "Tree Root: ${treeRoot.orEmpty()}"
+        "Tree Root: ${treeRoot.orEmpty()}",
+        "Filepath: $filepath"
     ).joinToString("\n")
 
+    fun validate(): Boolean {
+        if (mode.equals(MODE.csv) && filepath == null) {
+            throw IllegalArgumentException("Filename is mandatory if output mode is CSV")
+        }
+
+        return true
+    }
 }
